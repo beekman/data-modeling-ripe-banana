@@ -4,6 +4,8 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
+const Reviewer = require('../lib/models/Reviewer');
+const Actor = require('../lib/models/Actor');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -12,6 +14,14 @@ describe('app routes', () => {
 
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
+  });
+
+  beforeEach(async () => {
+    actor = await Actor.create({
+      name: 'Merv Griffin',
+      dob: new Date('June 1 1962'),
+      pob: 'Los Angeles, California'
+    });
   });
 
   afterAll(() => {
