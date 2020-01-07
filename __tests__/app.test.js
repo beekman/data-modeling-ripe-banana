@@ -17,4 +17,8 @@ describe('app routes', () => {
   afterAll(() => {
     return mongoose.connection.close();
   });
+
+  it('should do something', () => {
+    expect('a'.repeat(140)).toEqual('a'.repeat(140));
+  });
 });
