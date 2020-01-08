@@ -17,6 +17,7 @@ describe('tests for actors routes', () => {
 
   let actor;
   let date;
+  // eslint-disable-next-line space-before-function-paren
   beforeEach(async () => {
     date = new Date('June 1 1962');
     actor = await Actor.create({
@@ -35,10 +36,9 @@ describe('tests for actors routes', () => {
     return request(app)
       .post('/api/v1/actors')
       .send({
-        // actorId: actor._id,
         name: 'Merv Griffin',
         dob: date,
-        pob: 'Los Angeles, California'
+        pob: 'Los Angeles, California, USA'
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -46,13 +46,14 @@ describe('tests for actors routes', () => {
           // actorId: actor._id.toString(),
           name: 'Merv Griffin',
           dob: date.toISOString(),
-          pob: 'Los Angeles, California',
+          pob: 'Los Angeles, California, USA',
           __v: 0
         });
       });
   });
 
 
+  // eslint-disable-next-line space-before-function-paren
   it('gets all actors', async () => {
     let actors = await Actor.create([
       { name: 'George Clooney', dob: Date.now(), pob: 'Los Angeles, California' },
@@ -69,16 +70,21 @@ describe('tests for actors routes', () => {
       });
   });
 
+  // eslint-disable-next-line space-before-function-paren
   it('gets an actor by id', async () => {
-    let actor = await Actor.create([
+    actor = await Actor.create([
       { name: 'Zach Galifinakis', dob: Date.now(), pob: 'Los Angeles, California' }]);
     return request(app)
       .get(`/api/v1/actors/${actor._id}`, function(req, res) {
-        actor.findOne({ _id: req.params.id }).lean().
-          then(actor => res.json({ actor })).
-          catch(error => res.json({ error: error.message }));
+        actor.findOne({ _id: req.params.id }).lean()
+          .then(actor => res.json({ actor }))
+          .catch(error => res.json({ error: error.message }));
 
-        expect(res.body).toContainEqual({ name: actor.name });
+        expect(res.body).toEqual({
+          name: actor.name,
+          dob: actor.dob,
+          pob: actor.pob
+        });
       });
   });
 });
