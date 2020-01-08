@@ -7,11 +7,13 @@
     "lib": "lib"
   },
   "dependencies": {
-    "node-fetch": "2.6.0",
-    "url": "0.11.0",
+    "chance": "1.1.4",
     "eslint": "6.8.0",
     "express": "4.17.1",
-    "mongoose": "5.8.5"
+    "faker": "4.1.0",
+    "mongoose": "5.8.5",
+    "node-fetch": "2.6.0",
+    "url": "0.11.0"
   },
   "devDependencies": {
     "@types/jest": "24.0.25",
@@ -25,6 +27,9 @@
     "test": "jest --verbose --coverage",
     "test:watch": "npm run test -- --watch",
     "lint": "eslint '**/*.js'"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "repository": {
     "type": "git",

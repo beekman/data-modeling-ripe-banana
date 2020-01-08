@@ -28,29 +28,21 @@ describe('tests for studios routes', () => {
     return mongoose.connection.close();
   });
 
-
   // eslint-disable-next-line space-before-function-paren
   it('creates an studio', async () => {
-    let studio2 = await Studio.create({
-      name: 'Lionsgate',
-      address: 'Los Angeles, California, USA'
-    });
     return request(app)
-
-
       .post('/api/v1/studios')
-
       .send({
-        name: studio2.name.toString(),
+        name: studio.name.toString(),
         address: 'Los Angeles, California, USA'
       })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          name: studio2.name.toString(),
-          state: studio2.state,
-          city: studio2.city,
-          country: studio2.country,
+          name: studio.name.toString(),
+          state: studio.state,
+          city: studio.city,
+          country: studio.country,
           __v: 0
         });
       });
@@ -59,7 +51,7 @@ describe('tests for studios routes', () => {
 
   // eslint-disable-next-line space-before-function-paren
   it('gets all studios', async () => {
-    let studios = await Studio.create([
+    studios = await Studio.create([
       { name: 'Universal', address: 'Los Angeles, California, USA' },
       { name: 'Paramount', address: 'Los Angeles, California, USA' },
       { name: 'Warner Bros', address: 'New York, NY, USA' }
@@ -68,14 +60,12 @@ describe('tests for studios routes', () => {
       .get('/api/v1/studios')
       .then(res => {
         // studios = JSON.parse(JSON.stringify(studios));
-        studios.forEach(studio => {
-          expect(res.body).toContainEqual({
-            _id: expect.any(String),
-            name: studio.name.toString(),
-            state: studio.state,
-            city: studio.city,
-            country: studio.country
-          });
+        expect(res.body).toContain({
+          _id: expect.any(String),
+          name: studio.name.toString(),
+          state: studio.state,
+          city: studio.city,
+          country: studio.country
         });
       });
   });

@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Actor = require('../lib/models/Actor');
+const Film = require('../lib/models/Film');
+const Studio = require('../lib/models/Studio');
 
 describe('tests for actors routes', () => {
   beforeAll(() => {
@@ -17,13 +19,28 @@ describe('tests for actors routes', () => {
 
   let actor;
   let date;
+  let studio;
   // eslint-disable-next-line space-before-function-paren
   beforeEach(async () => {
     date = new Date('June 1 1962');
     actor = await Actor.create({
       name: 'Merv Griffin',
       dob: date,
-      pob: 'Los Angeles, California'
+      pob: 'Los Angeles, California, USA'
+    });
+
+    studio = await Studio.create({
+      name: 'Magnet'
+    });
+
+    film = await Film.create({
+      title: 'Hackers',
+      studio: studio.id,
+      released: 1996,
+      cast: [{
+        role: 'Crash Override',
+        actor: actor.id
+      }]
     });
   });
 

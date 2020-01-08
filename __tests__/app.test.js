@@ -19,7 +19,7 @@ describe('app routes', () => {
   });
 
   beforeEach(async () => {
-    actor = await Actor.create({
+    let actor = await Actor.create({
       name: 'Merv Griffin',
       dob: new Date('June 1 1962'),
       pob: 'Los Angeles, California'
