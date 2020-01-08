@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const Reviewer = require('../lib/models/Reviewer');
 const Actor = require('../lib/models/Actor');
 const Film = require('../lib/models/Film');
-const Review = require('../lib/models/Review')
+const Review = require('../lib/models/Review');
 
 describe('app routes', () => {
   beforeAll(() => {

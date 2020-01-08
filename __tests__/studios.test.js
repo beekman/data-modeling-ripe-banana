@@ -67,7 +67,7 @@ describe('tests for studios routes', () => {
     return request(app)
       .get('/api/v1/studios')
       .then(res => {
-        studios = JSON.parse(JSON.stringify(studios));
+        // studios = JSON.parse(JSON.stringify(studios));
         studios.forEach(studio => {
           expect(res.body).toContainEqual({
             _id: expect.any(String),
@@ -91,8 +91,11 @@ describe('tests for studios routes', () => {
           .catch(error => res.json({ error: error.message }));
 
         expect(res.body).toEqual({
-          name: studio.name,
-
+          _id: expect.any(String),
+          name: studio.name.toString(),
+          state: studio.state,
+          city: studio.city,
+          country: studio.country
         });
       });
   });

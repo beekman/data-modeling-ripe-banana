@@ -65,7 +65,10 @@ describe('tests for actors routes', () => {
       .then(res => {
         actors = JSON.parse(JSON.stringify(actors));
         actors.forEach(actor => {
-          expect(res.body).toContainEqual({ _id: actor._id.toString(), name: actor.name });
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            name: actor.name
+          });
         });
       });
   });
