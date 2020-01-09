@@ -18,6 +18,7 @@ describe('tests for actors routes', () => {
   });
 
   let actor;
+  let actors;
   let date;
   let studio;
 
@@ -72,7 +73,7 @@ describe('tests for actors routes', () => {
 
   // eslint-disable-next-line space-before-function-paren
   it('gets all actors', async () => {
-    let actors = await Actor.create(
+    actors = await Actor.create(
       { name: 'George Clooney', dob: Date.now(), pob: 'Los Angeles, California' },
       { name: 'Meryl Streep', dob: Date.now(), pob: 'Los Angeles, California' },
       { name: 'Ryan Reynolds', dob: Date.now(), pob: 'Los Angeles, California' }
@@ -97,7 +98,8 @@ describe('tests for actors routes', () => {
     actor = await Actor.create({
       name: 'Zach Galifinakis',
       dob: Date.now(),
-      pob: 'Los Angeles, California' });
+      pob: 'Los Angeles, California'
+    });
     return request(app)
       .get(`/api/v1/actors/${actor._id}`)
       .then((res) => {
