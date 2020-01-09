@@ -18,7 +18,7 @@ describe('tests for reviewers routes', () => {
 
   let reviewer;
   let reviewers;
-  let studio;
+
   // eslint-disable-next-line space-before-function-paren
   beforeEach(async () => {
     reviewer = await Reviewer.create({
@@ -62,18 +62,18 @@ describe('tests for reviewers routes', () => {
       });
   });
 
-
   // eslint-disable-next-line space-before-function-paren
   it('gets all reviewers', async () => {
-
     return request(app)
       .get('/api/v1/reviewers')
       .then(res => {
-        // reviewers = JSON.parse(JSON.stringify(reviewers));
-        expect(res.body).toContainEqual({
-          _id: expect.any(String),
-          name: reviewer.name,
-          company: reviewer.company
+        reviewers = JSON.parse(JSON.stringify(reviewers));
+        reviewers.forEach(reviewer => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            name: reviewer.name,
+            company: reviewer.company
+          });
         });
       });
   });

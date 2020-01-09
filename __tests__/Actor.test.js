@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Actor = require('../lib/models/Actor');
 
 describe('Actor model', () => {

@@ -20,6 +20,7 @@ describe('tests for actors routes', () => {
   let actor;
   let date;
   let studio;
+
   // eslint-disable-next-line space-before-function-paren
   beforeEach(async () => {
     date = new Date('June 1 1962');
@@ -71,31 +72,36 @@ describe('tests for actors routes', () => {
 
   // eslint-disable-next-line space-before-function-paren
   it('gets all actors', async () => {
-    let actors = await Actor.create([
+    let actors = await Actor.create(
       { name: 'George Clooney', dob: Date.now(), pob: 'Los Angeles, California' },
       { name: 'Meryl Streep', dob: Date.now(), pob: 'Los Angeles, California' },
       { name: 'Ryan Reynolds', dob: Date.now(), pob: 'Los Angeles, California' }
-    ]);
+    );
     return request(app)
       .get('/api/v1/actors')
       .then(res => {
-        actor = JSON.parse(JSON.stringify(actor));
-        expect(res.body).toContainEqual({
-          _id: expect.any(String),
-          name: actor.name
+        actors = JSON.parse(JSON.stringify(actors));
+        actors.forEach(actor => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            name: actor.name
+          });
         });
+
       });
   });
 
 
   // eslint-disable-next-line space-before-function-paren
   it('gets an actor by id', async () => {
-    actor = await Actor.create(
-      { name: 'Zach Galifinakis', dob: Date.now(), pob: 'Los Angeles, California' });
+    actor = await Actor.create({
+      name: 'Zach Galifinakis',
+      dob: Date.now(),
+      pob: 'Los Angeles, California' });
     return request(app)
       .get(`/api/v1/actors/${actor._id}`)
-      .then((res)=>{
-        actor=JSON.parse(JSON.stringify(actor));
+      .then((res) => {
+        actor = JSON.parse(JSON.stringify(actor));
         expect(res.body).toEqual({
           name: actor.name,
           dob: actor.dob,

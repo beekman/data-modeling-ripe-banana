@@ -39,29 +39,20 @@ describe('tests for reviews routes', () => {
       company: 'Entertainment Tonight'
     });
 
-    review = await Review.create({
-      rating: 3,
-      reviewer: reviewer.id,
-      review: 'Meh',
-      film: film.id
-    });
-
     film = await Film.create({
       title: 'Inception',
       released: 1927,
-      studio: studio.id
+      studio: studio._id
     });
 
-    reviews = await Review.create([
-      {
-        name: 'Roger Ebert',
-        company: 'Entertainment Tonight',
-      },
-      {
-        name: 'Gene Siskel',
-        company: 'Chicago Sun Times'
-      }
-    ]);
+    review = await Review.create({
+      rating: 3,
+      reviewer: reviewer._id,
+      review: 'Bad',
+      film: film._id
+    });
+
+
   });
 
   it('creates an review', () => {
@@ -79,7 +70,7 @@ describe('tests for reviews routes', () => {
           _id: expect.any(String),
           rating: 3,
           review: 'Bad',
-          reviewer: 'Roger Ebert',
+          reviewer: reviewer.id,
           film: film.id,
           __v: 0
         });
@@ -91,14 +82,13 @@ describe('tests for reviews routes', () => {
     return request(app)
       .get('/api/v1/reviews')
       .then(res => {
-        expect(res.body).toContainEqual({
+        expect(res.body).toEqual([{
           _id: expect.any(String),
           rating: 3,
           review: 'Bad',
-          reviewer: 'Roger Ebert',
-          film: film.id,
-          __v: 0
-        });
+          reviewer: reviewer._id.toString(),
+          film: film._id.toString()
+        }]);
       });
   });
 
@@ -106,7 +96,7 @@ describe('tests for reviews routes', () => {
   // eslint-disable-next-line space-before-function-paren
   it('gets an review by id', async () => {
     review = await Review.create([
-      { reviewer: 'Roger Ebert', review: 'The Chicago Sun Times', rating: 5 }]);
+      { reviewer: reviewer._id, review: 'The Chicago Sun Times', rating: 5, film: film.id }]);
     return request(app)
       .get(`/api/v1/reviews/${review._id}`, function(req, res) {
         review.findOne({ _id: req.params.id })
@@ -114,8 +104,8 @@ describe('tests for reviews routes', () => {
           .catch(error => res.json({ error: error.message }));
 
         expect(res.body).toEqual({
-          _id: expect.any(String),
-          reviewer: 'Roger Ebert',
+          _id: review.id,
+          reviewer: reviewer.id,
           review: 'The Chicago Sun Times',
           rating: 5
         });
@@ -148,9 +138,9 @@ describe('tests for reviews routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: review.id,
-          rating: 5,
+          rating: 3,
           reviewer: reviewer.id,
-          review: 'By far the most meaningful film I have ever had the priviledge to witness.',
+          review: 'Bad',
           film: film.id,
           __v: 0
         });
