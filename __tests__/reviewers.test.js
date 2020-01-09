@@ -70,12 +70,10 @@ describe('tests for reviewers routes', () => {
       .get('/api/v1/reviewers')
       .then(res => {
         // reviewers = JSON.parse(JSON.stringify(reviewers));
-        reviewers.forEach(reviewer => {
-          expect(res.body).toContainEqual({
-            _id: expect.any(String),
-            name: reviewer.name,
-            company: reviewer.company
-          });
+        expect(res.body).toContainEqual({
+          _id: expect.any(String),
+          name: reviewer.name,
+          company: reviewer.company
         });
       });
   });

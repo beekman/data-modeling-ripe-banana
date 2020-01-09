@@ -22,11 +22,12 @@ describe('tests for reviews routes', () => {
   afterAll(() => {
     return mongoose.connection.close();
   });
+
   let review;
   let reviewer;
-  let reviews;
   let film;
   let studio;
+  let reviews;
   // eslint-disable-next-line space-before-function-paren
   beforeEach(async () => {
     studio = await Studio.create({
@@ -72,6 +73,7 @@ describe('tests for reviews routes', () => {
         reviewer: reviewer.id,
         film: film.id
       })
+
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
@@ -89,16 +91,17 @@ describe('tests for reviews routes', () => {
     return request(app)
       .get('/api/v1/reviews')
       .then(res => {
-        reviews = JSON.parse(JSON.stringify(reviews));
-        reviews.forEach(review => {
-          expect(res.body).toContainEqual({
-            _id: expect.any(String),
-            name: review.name,
-            company: review.company
-          });
+        expect(res.body).toContainEqual({
+          _id: expect.any(String),
+          rating: 3,
+          review: 'Bad',
+          reviewer: 'Roger Ebert',
+          film: film.id,
+          __v: 0
         });
       });
   });
+
 
   // eslint-disable-next-line space-before-function-paren
   it('gets an review by id', async () => {
@@ -112,7 +115,9 @@ describe('tests for reviews routes', () => {
 
         expect(res.body).toEqual({
           _id: expect.any(String),
-          reviewer: 'Roger Ebert', review: 'The Chicago Sun Times', rating: 5
+          reviewer: 'Roger Ebert',
+          review: 'The Chicago Sun Times',
+          rating: 5
         });
       });
   });

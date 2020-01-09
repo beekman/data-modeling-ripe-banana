@@ -39,7 +39,7 @@ describe('tests for actors routes', () => {
       released: 1996,
       cast: [{
         role: 'Crash Override',
-        actor: actor.id
+        actor: actor._id
       }]
     });
   });
@@ -60,7 +60,6 @@ describe('tests for actors routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          // actorId: actor._id.toString(),
           name: 'Merv Griffin',
           dob: date.toISOString(),
           pob: 'Los Angeles, California, USA',
@@ -80,26 +79,23 @@ describe('tests for actors routes', () => {
     return request(app)
       .get('/api/v1/actors')
       .then(res => {
-        actors = JSON.parse(JSON.stringify(actors));
-        actors.forEach(actor => {
-          expect(res.body).toContainEqual({
-            _id: expect.any(String),
-            name: actor.name
-          });
+        actor = JSON.parse(JSON.stringify(actor));
+        expect(res.body).toContainEqual({
+          _id: expect.any(String),
+          name: actor.name
         });
       });
   });
 
+
   // eslint-disable-next-line space-before-function-paren
   it('gets an actor by id', async () => {
-    actor = await Actor.create([
-      { name: 'Zach Galifinakis', dob: Date.now(), pob: 'Los Angeles, California' }]);
+    actor = await Actor.create(
+      { name: 'Zach Galifinakis', dob: Date.now(), pob: 'Los Angeles, California' });
     return request(app)
-      .get(`/api/v1/actors/${actor._id}`, function(req, res) {
-        actor.findOne({ _id: req.params.id }).lean()
-          .then(actor => res.json({ actor }))
-          .catch(error => res.json({ error: error.message }));
-
+      .get(`/api/v1/actors/${actor._id}`)
+      .then((res)=>{
+        actor=JSON.parse(JSON.stringify(actor));
         expect(res.body).toEqual({
           name: actor.name,
           dob: actor.dob,
