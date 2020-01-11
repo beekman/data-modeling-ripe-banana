@@ -1,86 +1,44 @@
+
 require('dotenv').config();
 
 const request = require('supertest');
 const app = require('../lib/app');
-const connect = require('../lib/utils/connect');
-const mongoose = require('mongoose');
-const Reviewer = require('../lib/models/Reviewer');
-const Studio = require('../lib/models/Studio');
+const { getReviewer, getReviewers, getReview } = require('../lib/helpers/data-helpers');
+const Review = require('../lib/models/Review');
 
 describe('tests for reviewers routes', () => {
-  beforeAll(() => {
-    connect();
-  });
-
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
-
-  let reviewer;
-  let reviewers;
-
-  // eslint-disable-next-line space-before-function-paren
-  beforeEach(async () => {
-    reviewer = await Reviewer.create({
-      name: 'Roger Ebert',
-      company: 'Entertainment Tonight'
-    });
-    reviewers = await Reviewer.create([
-      {
-        name: 'Yahtzee',
-        company: 'The Interwebs',
-      },
-      {
-        name: 'Gene Siskel',
-        company: 'Chicago Sun Times'
-      }
-    ]);
-    studio = await Studio.create({
-      name: 'Bad Robot'
-    });
-  });
-
-  afterAll(() => {
-    return mongoose.connection.close();
-  });
-
-
-  it('creates an reviewer', () => {
+  it('creates a reviewer', () => {
     return request(app)
       .post('/api/v1/reviewers')
       .send({
-        name: 'Roger Ebert',
-        company: 'Entertainment Tonight'
+        name: 'reviewer name',
+        company: 'company name'
       })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          name: 'Roger Ebert',
-          company: 'Entertainment Tonight',
+          name: 'reviewer name',
+          company: 'company name',
           __v: 0
         });
       });
   });
 
-  // eslint-disable-next-line space-before-function-paren
   it('gets all reviewers', async () => {
+    const reviewers = await getReviewers();
+
     return request(app)
       .get('/api/v1/reviewers')
       .then(res => {
-        reviewers = JSON.parse(JSON.stringify(reviewers));
         reviewers.forEach(reviewer => {
-          expect(res.body).toContainEqual({
-            _id: expect.any(String),
-            name: reviewer.name,
-            company: reviewer.company
-          });
+          expect(res.body).toContainEqual(reviewer);
         });
       });
   });
 
-  // eslint-disable-next-line space-before-function-paren
-  it('gets an reviewer by id', async () => {
 
+  it('gets an reviewer by id', async () => {
+    const reviewer = await getReviewer();
     return request(app)
       .get(`/api/v1/reviewers/${reviewer._id}`, function(req, res) {
         reviewer.findOne({ _id: req.params.id })
@@ -90,7 +48,8 @@ describe('tests for reviewers routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           name: 'Roger Ebert',
-          company: 'The Chicago Sun Times'
+          company: 'The Chicago Sun Times',
+          __v: 0
         });
       });
   });
