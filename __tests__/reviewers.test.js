@@ -19,7 +19,8 @@ describe('tests for reviewers routes', () => {
           _id: expect.any(String),
           name: 'reviewer name',
           company: 'company name',
-          __v: 0
+          __v: 0,
+          id: expect.any(String)
         });
       });
   });

@@ -30,7 +30,7 @@ describe('app routes', () => {
       });
   });
 
-  it('gets all studios', async() => {
+  it('gets all studios', async () => {
     const studios = await getStudios();
 
     return request(app)
@@ -38,12 +38,16 @@ describe('app routes', () => {
       .then(res => {
         studios.forEach(studio => {
           delete studio.__v;
-          expect(res.body).toContainEqual(studio);
+          expect(res.body).toContainEqual({
+            id: expect.any(String),
+            _id: expect.any(String),
+            name: studio.name
+          });
         });
       });
   });
 
-  it('gets a studio by id', async() => {
+  it('gets a studio by id', async () => {
     const studio = await getStudio();
 
     return request(app)
